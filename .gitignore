@@ -1,4 +1,8 @@
-/bazel-*
+/.cache/
 
-/rust-project.json
+/bazel-*
+/external
+
 /MODULE.bazel.lock
+/compile_commands.json
+/rust-project.json

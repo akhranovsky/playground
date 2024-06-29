@@ -8,3 +8,6 @@ build:rustfmt --output_groups=+rustfmt_checks
 # Enable clippy for all targets in the workspace
 build:clippy --aspects=//rust:defs.bzl%rust_clippy_aspect
 build:clippy --output_groups=+clippy_checks
+
+# Enable C++20
+build --copt -std=c++20
