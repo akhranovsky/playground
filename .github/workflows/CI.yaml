@@ -18,7 +18,7 @@ jobs:
           repository-cache: true
 
   cpp:
-    name: Build & test C++ code
+    name: C++
     runs-on: ubuntu-latest
     needs: setup-bazel
     steps:
@@ -30,7 +30,7 @@ jobs:
         run: bazelisk test //cpp:all
 
   rust:
-    name: Build & test Rust code
+    name: Rust
     runs-on: ubuntu-latest
     needs: setup-bazel
     steps:
