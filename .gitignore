@@ -6,3 +6,4 @@
 /MODULE.bazel.lock
 /compile_commands.json
 /rust-project.json
+/rust/Cargo.lock

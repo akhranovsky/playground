@@ -1,8 +1,19 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, VecDeque};
 
 pub type Node = usize;
+pub type Edge = (Node, Node);
 
-pub fn topo_sort_kahn(number_of_nodes: usize, edges: Vec<(Node, Node)>) -> Option<Vec<Node>> {
+// Topological sorting using BFS (Kahn's algorithm).
+// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
+//
+// Time complexity: O(V + E)
+// Space complexity: O(V)
+//
+// Parameters:
+// `number_of_nodes` is the number of nodes in the graph.
+// `edges` is a list of edges in the form `(from, to)` where `from` and `to` are
+// node indices.
+pub fn topo_sort_kahn(number_of_nodes: usize, edges: Vec<Edge>) -> Option<Vec<Node>> {
     let mut result = Vec::with_capacity(number_of_nodes);
 
     if number_of_nodes == 0 {
@@ -15,15 +26,14 @@ pub fn topo_sort_kahn(number_of_nodes: usize, edges: Vec<(Node, Node)>) -> Optio
         in_degree[to] += 1;
     }
 
-    let mut queue = Vec::with_capacity(number_of_nodes);
-    for i in 0..number_of_nodes {
-        if in_degree[i] == 0 {
-            queue.push(i);
-        }
-    }
+    let mut queue = in_degree
+        .iter()
+        .enumerate()
+        .filter(|(_, &degree)| degree == 0)
+        .map(|(node, _)| node)
+        .collect::<VecDeque<_>>();
 
-    while !queue.is_empty() {
-        let node = queue.pop().unwrap();
+    while let Some(node) = queue.pop_back() {
         result.push(node);
 
         for to in edges
@@ -33,10 +43,11 @@ pub fn topo_sort_kahn(number_of_nodes: usize, edges: Vec<(Node, Node)>) -> Optio
         {
             in_degree[to] -= 1;
             if in_degree[to] == 0 {
-                queue.push(to);
+                queue.push_back(to);
             }
         }
     }
+
     (result.len() == number_of_nodes).then_some(result)
 }
 
@@ -48,10 +59,7 @@ impl std::fmt::Display for CycleDetected {
     }
 }
 
-pub fn topo_sort_dfs(
-    number_of_nodes: usize,
-    edges: Vec<(Node, Node)>,
-) -> Result<Vec<Node>, CycleDetected> {
+pub fn topo_sort_dfs(number_of_nodes: usize, edges: Vec<Edge>) -> Result<Vec<Node>, CycleDetected> {
     let mut result = Vec::with_capacity(number_of_nodes);
     let mut visited = vec![false; number_of_nodes];
     let mut stack = HashSet::with_capacity(number_of_nodes);
@@ -70,7 +78,7 @@ pub fn topo_sort_dfs(
 
 fn dfs(
     node: Node,
-    edges: &[(Node, Node)],
+    edges: &[Edge],
     visited: &mut [bool],
     stack: &mut HashSet<Node>,
     result: &mut Vec<Node>,
