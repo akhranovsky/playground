@@ -1,0 +1,2 @@
+bazel_dep(name = "googletest", version = "1.14.0", repo_name="com_google_googletest")
+bazel_dep(name = "rules_rust", version = "0.46.0")
