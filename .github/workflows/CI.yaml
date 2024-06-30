@@ -3,8 +3,8 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  Build:
-    name: Build
+  test:
+    name: Test C++ and Rust
     runs-on: ubuntu-latest
     steps:
       - name: Setup Bazel
@@ -18,25 +18,7 @@ jobs:
           repository-cache: true
       - name: Checkout
         uses: actions/checkout@v4
-      - name: C++
-        run: bazelisk build //cpp:all
-      - name: Rust
-        run: bazelisk build //rust:all
-
-  test-cpp:
-    name: Test C++
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - run: bazelisk test //cpp:all
-
-  test-rust:
-    name: Test Rust
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - run: bazelisk test //rust:all
+      - name: Build
+        run: bazelisk build //...
+      - name: Test
+        run: bazelisk test //...
